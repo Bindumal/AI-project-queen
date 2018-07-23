@@ -1,0 +1,294 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red127\green0\blue85;\red0\green0\blue0;\red0\green0\blue192;\red106\green62\blue62;\red63\green127\blue95;\red42\green0\blue255;}
+{\*\generator Riched20 10.0.16299}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\b\f0\fs20\lang9 import\cf2\b0  java.util.ArrayList;\cf0\par
+\cf1\b import\cf2\b0  java.util.List;\cf0\par
+\cf1\b import\cf2\b0  java.util.Random;\cf0\par
+\par
+\cf1\b public\cf2\b0  \cf1\b class\cf2\b0  QueensBoard \{\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b int\cf2\b0  \cf3\i TOTAL_QUEENS\cf2\i0  = 8;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  \cf1\b int\cf2\b0 [][] \cf3 board\cf2 ;\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  \cf1\b int\cf2\b0 [] \cf3 queenPositions\cf2 ;\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b static\cf2\b0  \cf1\b void\cf2\b0  main(String[] \cf4 args\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b boolean\cf2\b0  \cf4 climb\cf2  = \cf1\b true\cf2\b0 ;\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 climbCount\cf2  = 0;\cf0\par
+\cf2\tab\tab\cf0\par
+\cf2\tab\tab\cf5 // 5 restarts\cf0\par
+\cf2\tab\tab\cf1\b while\cf2\b0  (\cf4 climb\cf2 ) \{\cf0\par
+\cf2\tab\tab\tab QueensBoard \cf4 board\cf2  = \cf1\b new\cf2\b0  QueensBoard(\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf1\b new\cf2\b0  \cf1\b int\cf2\b0 [\cf3\i TOTAL_QUEENS\cf2\i0 ][\cf3\i TOTAL_QUEENS\cf2\i0 ], \cf1\b new\cf2\b0  \cf1\b int\cf2\b0 [8]);\cf0\par
+\par
+\cf2\tab\tab\tab\cf5 // randomly place queens\cf0\par
+\cf2\tab\tab\tab\cf4 board\cf2 .placeQueens();\cf0\par
+\cf2\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "Trial #: "\cf2  + (\cf4 climbCount\cf2 +1));\cf0\par
+\cf2\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "Original board:"\cf2 );\cf0\par
+\cf2\tab\tab\tab\cf4 board\cf2 .printBoard();\cf0\par
+\cf2\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "# pairs of queens attacking each other: "\cf0\par
+\cf2\tab\tab\tab\tab\tab + \cf4 board\cf2 .h() + \cf6 "\\n"\cf2 );\cf0\par
+\par
+\cf2\tab\tab\tab\cf5 // score to be compared against\cf0\par
+\cf2\tab\tab\tab\cf1\b int\cf2\b0  \cf4 localMin\cf2  = \cf4 board\cf2 .h();\cf0\par
+\cf2\tab\tab\tab\cf1\b boolean\cf2\b0  \cf4 best\cf2  = \cf1\b false\cf2\b0 ;\cf0\par
+\cf2\tab\tab\tab\cf5 // array to store best queen positions by row (array index is column)\cf0\par
+\cf2\tab\tab\tab\cf1\b int\cf2\b0 [] \cf4 bestQueenPositions\cf2  = \cf1\b new\cf2\b0  \cf1\b int\cf2\b0 [8];\cf0\par
+\par
+\cf2\tab\tab\tab\cf5 // iterate through each column \cf0\par
+\cf2\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 j\cf2  = 0; \cf4 j\cf2  < \cf4 board\cf2 .\cf3 board\cf2 .\cf3 length\cf2 ; \cf4 j\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "Iterating through COLUMN "\cf2  + \cf4 j\cf2  + \cf6 ":"\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\cf4 best\cf2  = \cf1\b false\cf2\b0 ;\cf0\par
+\cf2\tab\tab\tab\tab\cf5 //  iterate through each row\cf0\par
+\cf2\tab\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf4 board\cf2 .\cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf5 // skip score calculated by original board\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 i\cf2  != \cf4 board\cf2 .\cf3 queenPositions\cf2 [\cf4 j\cf2 ]) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf5 // move queen \cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf4 board\cf2 .moveQueen(\cf4 i\cf2 , \cf4 j\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf4 board\cf2 .printBoard();\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println();\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf5 // calculate score, if best seen then store queen position\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 board\cf2 .h() < \cf4 localMin\cf2 ) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\cf4 best\cf2  = \cf1\b true\cf2\b0 ;\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\cf4 localMin\cf2  = \cf4 board\cf2 .h();\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\cf4 bestQueenPositions\cf2 [\cf4 j\cf2 ] = \cf4 i\cf2 ;\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf5 // reset to original queen position\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf4 board\cf2 .resetQueen(\cf4 i\cf2 , \cf4 j\cf2 );\cf0\par
+\par
+\cf2\tab\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\tab\cf0\par
+\cf2\tab\tab\tab\tab\cf5 // change 2 back to 1\cf0\par
+\cf2\tab\tab\tab\tab\cf4 board\cf2 .resetBoard(\cf4 j\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 best\cf2 ) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf5 // if a best score was found, place queen in this position\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf4 board\cf2 .placeBestQueen(\cf4 j\cf2 , \cf4 bestQueenPositions\cf2 [\cf4 j\cf2 ]);\cf0\par
+\cf2\tab\tab\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "Best board found this iteration: "\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf4 board\cf2 .printBoard();\cf0\par
+\cf2\tab\tab\tab\tab\tab System.\cf3\b\i out\cf0\b0\i0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab .println(\cf6 "# pairs of queens attacking each other: "\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\tab\tab + \cf4 board\cf2 .h() + \cf6 "\\n"\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\} \cf1\b else\cf2\b0  \{\cf0\par
+\cf2\tab\tab\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "No better board found."\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf4 board\cf2 .printBoard();\cf0\par
+\cf2\tab\tab\tab\tab\tab System.\cf3\b\i out\cf0\b0\i0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab .println(\cf6 "# pairs of queens attacking each other: "\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\tab\tab + \cf4 board\cf2 .h() + \cf6 "\\n"\cf2 );\cf0\par
+\cf2\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\tab\cf5 // if score = 0, hill climbing has solved problem\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 board\cf2 .h() == 0)\cf0\par
+\cf2\tab\tab\tab\tab\cf4 climb\cf2  = \cf1\b false\cf2\b0 ;\cf0\par
+\par
+\cf2\tab\tab\tab\cf4 climbCount\cf2 ++;\cf0\par
+\par
+\cf2\tab\tab\tab\cf5 // only 5 restarts\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 climbCount\cf2  == 6) \{\cf0\par
+\cf2\tab\tab\tab\tab\cf4 climb\cf2  = \cf1\b false\cf2\b0 ;\cf0\par
+\cf2\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println(\cf6 "Done in "\cf2  + (\cf4 climbCount\cf2 -1) + \cf6 " restarts."\cf2 );\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  QueensBoard(\cf1\b int\cf2\b0 [][] \cf4 board\cf2 , \cf1\b int\cf2\b0 [] \cf4 positions\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf3 board\cf2  = \cf4 board\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b this\cf2\b0 .\cf3 queenPositions\cf2  = \cf4 positions\cf2 ;\cf0\par
+\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b private\cf2\b0  \cf1\b int\cf2\b0 [] generateQueens() \{\cf0\par
+\par
+\cf2\tab\tab List<Integer> \cf4 randomPos\cf2  = \cf1\b new\cf2\b0  ArrayList<Integer>();\cf0\par
+\par
+\cf2\tab\tab Random \cf4 r\cf2  = \cf1\b new\cf2\b0  Random();\cf0\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3\i TOTAL_QUEENS\cf2\i0 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf4 randomPos\cf2 .add(\cf4 r\cf2 .nextInt(8));\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 randomPositions\cf2  = \cf1\b new\cf2\b0  \cf1\b int\cf2\b0 [\cf3\i TOTAL_QUEENS\cf2\i0 ];\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf4 randomPos\cf2 .size(); \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf4 randomPositions\cf2 [\cf4 i\cf2 ] = \cf4 randomPos\cf2 .get(\cf4 i\cf2 );\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 randomPositions\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  placeQueens() \{\cf0\par
+\par
+\cf2\tab\tab\cf3 queenPositions\cf2  = generateQueens();\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf3 board\cf2 [\cf3 queenPositions\cf2 [\cf4 i\cf2 ]][\cf4 i\cf2 ] = 1;\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b int\cf2\b0  h() \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 totalPairs\cf2  = 0;\cf0\par
+\par
+\cf2\tab\tab\cf5 // checking rows\cf0\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab ArrayList<Boolean> \cf4 pairs\cf2  = \cf1\b new\cf2\b0  ArrayList<Boolean>();\cf0\par
+\cf2\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 j\cf2  = 0; \cf4 j\cf2  < \cf3 board\cf2 [\cf4 i\cf2 ].\cf3 length\cf2 ; \cf4 j\cf2 ++) \{\cf0\par
+\par
+\cf2\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 j\cf2 ] == 1) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf4 pairs\cf2 .add(\cf1\b true\cf2\b0 );\cf0\par
+\cf2\tab\tab\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 pairs\cf2 .size() != 0)\cf0\par
+\cf2\tab\tab\tab\tab\cf4 totalPairs\cf2  = \cf4 totalPairs\cf2  + (\cf4 pairs\cf2 .size() - 1);\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\cf5 // check diagonal from top left\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 rows\cf2  = \cf3 board\cf2 .\cf3 length\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 cols\cf2  = \cf3 board\cf2 .\cf3 length\cf2 ;\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 maxSum\cf2  = \cf4 rows\cf2  + \cf4 cols\cf2  - 2;\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 sum\cf2  = 0; \cf4 sum\cf2  <= \cf4 maxSum\cf2 ; \cf4 sum\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab ArrayList<Boolean> \cf4 pairs\cf2  = \cf1\b new\cf2\b0  ArrayList<Boolean>();\cf0\par
+\cf2\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf4 rows\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 j\cf2  = 0; \cf4 j\cf2  < \cf4 cols\cf2 ; \cf4 j\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 i\cf2  + \cf4 j\cf2  - \cf4 sum\cf2  == 0) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 j\cf2 ] == 1) \{\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\tab\cf4 pairs\cf2 .add(\cf1\b true\cf2\b0 );\cf0\par
+\cf2\tab\tab\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 pairs\cf2 .size() != 0)\cf0\par
+\cf2\tab\tab\tab\tab\cf4 totalPairs\cf2  = \cf4 totalPairs\cf2  + (\cf4 pairs\cf2 .size() - 1);\cf0\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\cf5 // check mirrored diagonal. couldn't figure out algorithm so solved brute force.\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 pairs\cf2  = checkMirrorDiagonal();\cf0\par
+\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 totalPairs\cf2  + \cf4 pairs\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\cf2\tab\cf0\par
+\cf2\tab\cf1\b private\cf2\b0  \cf1\b int\cf2\b0  checkMirrorDiagonal() \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b1\cf2  = \{ \cf3 board\cf2 [7][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b2\cf2  = \{ \cf3 board\cf2 [7][1], \cf3 board\cf2 [6][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b3\cf2  = \{ \cf3 board\cf2 [7][2], \cf3 board\cf2 [6][1], \cf3 board\cf2 [5][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b4\cf2  = \{ \cf3 board\cf2 [7][3], \cf3 board\cf2 [6][2], \cf3 board\cf2 [5][1], \cf3 board\cf2 [4][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b5\cf2  = \{ \cf3 board\cf2 [7][4], \cf3 board\cf2 [6][3], \cf3 board\cf2 [5][2], \cf3 board\cf2 [4][1],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [3][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b6\cf2  = \{ \cf3 board\cf2 [7][5], \cf3 board\cf2 [6][4], \cf3 board\cf2 [5][3], \cf3 board\cf2 [4][2],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [3][1], \cf3 board\cf2 [2][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b7\cf2  = \{ \cf3 board\cf2 [7][6], \cf3 board\cf2 [6][5], \cf3 board\cf2 [5][4], \cf3 board\cf2 [4][3],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [3][2], \cf3 board\cf2 [2][1], \cf3 board\cf2 [1][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b8\cf2  = \{ \cf3 board\cf2 [7][7], \cf3 board\cf2 [6][6], \cf3 board\cf2 [5][5], \cf3 board\cf2 [4][4],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [3][3], \cf3 board\cf2 [2][2], \cf3 board\cf2 [1][1], \cf3 board\cf2 [0][0] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b9\cf2  = \{ \cf3 board\cf2 [6][7], \cf3 board\cf2 [5][6], \cf3 board\cf2 [4][5], \cf3 board\cf2 [3][4],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [2][3], \cf3 board\cf2 [1][2], \cf3 board\cf2 [0][1] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b10\cf2  = \{ \cf3 board\cf2 [5][7], \cf3 board\cf2 [4][6], \cf3 board\cf2 [3][5], \cf3 board\cf2 [2][4],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [1][3], \cf3 board\cf2 [0][2] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b11\cf2  = \{ \cf3 board\cf2 [4][7], \cf3 board\cf2 [3][6], \cf3 board\cf2 [2][5], \cf3 board\cf2 [1][4],\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [0][3] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b12\cf2  = \{ \cf3 board\cf2 [3][7], \cf3 board\cf2 [2][6], \cf3 board\cf2 [1][5], \cf3 board\cf2 [0][4] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b13\cf2  = \{ \cf3 board\cf2 [2][7], \cf3 board\cf2 [1][6], \cf3 board\cf2 [0][5] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b14\cf2  = \{ \cf3 board\cf2 [1][7], \cf3 board\cf2 [0][6] \};\cf0\par
+\cf2\tab\tab\cf1\b int\cf2\b0 [] \cf4 b15\cf2  = \{ \cf3 board\cf2 [0][7] \};\cf0\par
+\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 totalPairs\cf2  = 0;\cf0\par
+\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b1\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b2\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b3\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b4\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b5\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b6\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b7\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b8\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b9\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b10\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b11\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b12\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b13\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b14\cf2 );\cf0\par
+\cf2\tab\tab\cf4 totalPairs\cf2  += checkMirrorHorizontal(\cf4 b15\cf2 );\cf0\par
+\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 totalPairs\cf2 ;\cf0\par
+\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  moveQueen(\cf1\b int\cf2\b0  \cf4 row\cf2 , \cf1\b int\cf2\b0  \cf4 col\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf5 // original queen will become a 2 and act as a marker\cf0\par
+\cf2\tab\tab\cf3 board\cf2 [\cf3 queenPositions\cf2 [\cf4 col\cf2 ]][\cf4 col\cf2 ] = 2;\cf0\par
+\par
+\cf2\tab\tab\cf3 board\cf2 [\cf4 row\cf2 ][\cf4 col\cf2 ] = 1;\cf0\par
+\par
+\cf2\tab\}\cf0\par
+\par
+\par
+\par
+\cf2\tab\cf1\b private\cf2\b0  \cf1\b int\cf2\b0  checkMirrorHorizontal(\cf1\b int\cf2\b0 [] \cf4 b\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b int\cf2\b0  \cf4 totalPairs\cf2  = 0;\cf0\par
+\par
+\cf2\tab\tab ArrayList<Boolean> \cf4 pairs\cf2  = \cf1\b new\cf2\b0  ArrayList<Boolean>();\cf0\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf4 b\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf4 b\cf2 [\cf4 i\cf2 ] == 1)\cf0\par
+\cf2\tab\tab\tab\tab\cf4 pairs\cf2 .add(\cf1\b true\cf2\b0 );\cf0\par
+\par
+\cf2\tab\tab\}\cf0\par
+\par
+\cf2\tab\tab\cf1\b if\cf2\b0  (\cf4 pairs\cf2 .size() != 0)\cf0\par
+\cf2\tab\tab\tab\cf4 totalPairs\cf2  = (\cf4 pairs\cf2 .size() - 1);\cf0\par
+\par
+\cf2\tab\tab\cf1\b return\cf2\b0  \cf4 totalPairs\cf2 ;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  resetQueen(\cf1\b int\cf2\b0  \cf4 row\cf2 , \cf1\b int\cf2\b0  \cf4 col\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 row\cf2 ][\cf4 col\cf2 ] == 1)\cf0\par
+\cf2\tab\tab\tab\cf3 board\cf2 [\cf4 row\cf2 ][\cf4 col\cf2 ] = 0;\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  resetBoard(\cf1\b int\cf2\b0  \cf4 col\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] == 2)\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] = 1;\cf0\par
+\cf2\tab\tab\}\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  placeBestQueen(\cf1\b int\cf2\b0  \cf4 col\cf2 , \cf1\b int\cf2\b0  \cf4 queenPos\cf2 ) \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] == 1)\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] = 2;\cf0\par
+\par
+\cf2\tab\tab\}\cf0\par
+\cf2\tab\tab\cf3 board\cf2 [\cf4 queenPos\cf2 ][\cf4 col\cf2 ] = 1;\cf0\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf1\b if\cf2\b0  (\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] == 2)\cf0\par
+\cf2\tab\tab\tab\tab\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 col\cf2 ] = 0;\cf0\par
+\par
+\cf2\tab\tab\}\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\tab\cf1\b public\cf2\b0  \cf1\b void\cf2\b0  printBoard() \{\cf0\par
+\par
+\cf2\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 i\cf2  = 0; \cf4 i\cf2  < \cf3 board\cf2 .\cf3 length\cf2 ; \cf4 i\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\cf1\b for\cf2\b0  (\cf1\b int\cf2\b0  \cf4 j\cf2  = 0; \cf4 j\cf2  < \cf3 board\cf2 [\cf4 i\cf2 ].\cf3 length\cf2 ; \cf4 j\cf2 ++) \{\cf0\par
+\cf2\tab\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .print(\cf3 board\cf2 [\cf4 i\cf2 ][\cf4 j\cf2 ] + \cf6 " "\cf2 );\cf0\par
+\cf2\tab\tab\tab\}\cf0\par
+\cf2\tab\tab\tab System.\cf3\b\i out\cf2\b0\i0 .println();\cf0\par
+\cf2\tab\tab\}\cf0\par
+\cf2\tab\}\cf0\par
+\par
+\cf2\}\cf0\f1\fs22\par
+}
+ 
